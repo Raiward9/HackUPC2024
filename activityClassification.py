@@ -24,3 +24,10 @@ activityToCategory = {'Art Exhibitions':'Art and Culture',
             'Wine Tasting':'Gastronomy',
             'Zip Line Adventures':'Adventure'}
 
+categoryToActivity = {'Art and Culture': ['Art Exhibitions', 'Cultural Festivals', 'Theater Performances'], 
+                      'Music': ['Concerts', 'Dancing Classes', 'Karaoke Nights', 'Pub Crawls'], 
+                      'Adventure': ['Hiking Excursions', 'Hot Air Balloon Rides', 'Snorkeling Tours', 'Zip Line Adventures'], 
+                      'Sports and Fitness': ['Beach Volleyball', 'Football Matches', 'Group Cycling Tours', 'Kayaking', 'Rock Climbing'], 
+                      'Gastronomy': ['Cooking Classes', 'Food Tours', 'Wine Tasting'], 
+                      'City Exploration': ['River Cruises', 'Segway Tours', 'Sightseeing Tours'], 
+                      'Miscellaneous': ['Escape Rooms', 'Scavenger Hunts', 'Theme Parks']}
