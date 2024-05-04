@@ -2,6 +2,5 @@ taipy
 matplotlib
 pandas
 pymongo
-json
 requests
 huggingface_hub
