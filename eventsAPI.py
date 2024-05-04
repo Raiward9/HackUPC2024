@@ -23,7 +23,7 @@ SEARCH_EVENTS_ENDPOINT = 'events.json'
 class Event:
     name: str
     type: str
-    image: str
+    imageURL: str
     date: str
     time: str
     venue: str
@@ -84,7 +84,7 @@ def classifyEvent(e: Event):
     e.classification = out['labels'][out['scores'].index(max(out['scores']))]
     
 
-    
+
 
 # ---------------- TESTING ----------------
 #dateSt = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')  
