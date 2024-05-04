@@ -1,1 +1,3 @@
 taipy
+matplotlib
+pandas
