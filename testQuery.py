@@ -23,6 +23,12 @@ def initDbClient():
         print(e)
         return None
 
+def doOneQueryPerInterest(depDate:datetime.datetime, retDate:datetime.datetime, city:str, preferences:list[str]):
+        for preference in preferences:
+            results = doQuery(depDate, retDate, city, [preference])
+            results = list(results)
+            if len(results) > 0:
+                print(results[0])
 
 def doQuery(depDate:datetime.datetime, retDate:datetime.datetime, city:str, preferences:list[str]) -> Cursor:
     global dbClient
@@ -96,9 +102,10 @@ def main():
     profile = askForInterests("Please enter your interests; ")
         
     results = doQuery(depDate, retDate, city, profile)
-    
+
     for res in results:
         print(res)
+
             
 if __name__ == "__main__":
     main()
