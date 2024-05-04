@@ -23,6 +23,7 @@ SEARCH_EVENTS_ENDPOINT = 'events.json'
 class Event:
     name: str
     type: str
+    pageLink: str
     imageURL: str
     date: str
     time: str
@@ -47,12 +48,13 @@ def getEventsInfo(events:list[Event]):
     for event in events:
         name = event['name']
         type = event['classifications'][0]['segment']['name']
+        pageLink = event['url']
         date =  event['dates']['start']['localDate']
         time = event['dates']['start']['localTime']
         venue = event['_embedded']['venues'][0]['name']
         images = event['images']
         image = getMainImage(images)['url']
-        eventsInfo.append(Event(name,type,image,date,time,venue,""))
+        eventsInfo.append(Event(name,type,pageLink,image,date,time,venue,""))
         classifyEvent(eventsInfo[-1])
     
     return eventsInfo
