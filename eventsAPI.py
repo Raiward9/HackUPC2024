@@ -60,7 +60,9 @@ def getEventsInfo(events:list[Event]):
     return eventsInfo
 
 
-def getActivitiesFromCityAndDate(cityName:str, dateIni:str, dateEnd:str):
+def getActivitiesFromCityAndDate(cityName:str, dateIni:datetime, dateEnd:datetime):
+    dateIni = dateIni.strftime('%Y-%m-%dT%H:%M:%SZ')
+    dateEnd = dateEnd.strftime('%Y-%m-%dT%H:%M:%SZ')
     params = {
     'apikey': API_KEY,
     'city': cityName, 
@@ -83,19 +85,17 @@ def classifyEvent(e: Event):
     inputs = "Classify the following activity: \""+ e.name + "\""
     params = {"candidate_labels":classifications}
     out = inference(inputs, params)
-    e.classification = out['labels'][out['scores'].index(max(out['scores']))]
+    e.classification = out['labels'][0]
     
 
 
-
 # ---------------- TESTING ----------------
-#dateSt = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')  
-#dateEnd = datetime(2024,5,25).strftime('%Y-%m-%dT%H:%M:%SZ')
+#dateSt = datetime.now()
+#dateEnd = datetime(2024,5,25)
 #lst = getActivitiesFromCityAndDate('Syracuse',dateSt,dateEnd)
 #for elem in lst: 
 #    print(elem)
 #    print('----------------')
-
 #print(len(lst))
 #lst2 = list(filter(lambda elem: elem.classification == "Miscellaneous",lst))
 #print(len(lst2))
