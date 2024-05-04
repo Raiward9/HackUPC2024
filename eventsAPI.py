@@ -23,12 +23,26 @@ SEARCH_EVENTS_ENDPOINT = 'events.json'
 class Event:
     name: str
     type: str
+    image: str
     date: str
     time: str
     venue: str
     classification: str
 
-def getEventsInfo(events:list[dict]):
+# returns the biggest image (width*height) in the list
+def getMainImage(images:list):
+    biggestSize = 0
+    bestImage = ''
+    for image in images:
+        size = int(image['width'])*int(image['height'])
+        if size > biggestSize: 
+            bestImage = image
+            biggestSize = size
+    
+    return bestImage
+
+
+def getEventsInfo(events:list[Event]):
     eventsInfo = []
     for event in events:
         name = event['name']
@@ -36,7 +50,9 @@ def getEventsInfo(events:list[dict]):
         date =  event['dates']['start']['localDate']
         time = event['dates']['start']['localTime']
         venue = event['_embedded']['venues'][0]['name']
-        eventsInfo.append(Event(name,type,date,time,venue,""))
+        images = event['images']
+        image = getMainImage(images)['url']
+        eventsInfo.append(Event(name,type,image,date,time,venue,""))
         classifyEvent(eventsInfo[-1])
     
     return eventsInfo
@@ -46,7 +62,8 @@ def getActivitiesFromCityAndDate(cityName:str, dateIni:str, dateEnd:str):
     params = {
     'apikey': API_KEY,
     'city': cityName, 
-    'startEndTime' : [dateIni,dateEnd],
+    'startDateTime': dateIni,
+    'endDateTime': dateEnd,
     }
     response = requests.get(BASE_URL + SEARCH_EVENTS_ENDPOINT, params=params)
     if response.status_code == 200:
@@ -66,10 +83,17 @@ def classifyEvent(e: Event):
     out = inference(inputs, params)
     e.classification = out['labels'][out['scores'].index(max(out['scores']))]
     
-    
-    
+
     
 
 # ---------------- TESTING ----------------
 #dateSt = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')  
-#print(getActivitiesFromCityAndDate('Syracuse',dateSt))
+#dateEnd = datetime(2024,5,25).strftime('%Y-%m-%dT%H:%M:%SZ')
+#lst = getActivitiesFromCityAndDate('Syracuse',dateSt,dateEnd)
+#for elem in lst: 
+#    print(elem)
+#    print('----------------')
+
+#print(len(lst))
+#lst2 = list(filter(lambda elem: elem.classification == "Miscellaneous",lst))
+#print(len(lst2))
