@@ -2,3 +2,4 @@ taipy
 matplotlib
 pandas
 json
+pymongo
