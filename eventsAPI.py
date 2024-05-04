@@ -21,7 +21,7 @@ class Event:
     time: str
     venue: str
 
-def getEventsInfo(events):
+def getEventsInfo(events:list[dict]):
     eventsInfo = []
     for event in events:
         name = event['name']
@@ -34,7 +34,7 @@ def getEventsInfo(events):
     return eventsInfo
 
 
-def getActivitiesFromCityAndDate(cityName,date):
+def getActivitiesFromCityAndDate(cityName:str, date:str):
     params = {
     'apikey': API_KEY,
     'city': cityName, 
