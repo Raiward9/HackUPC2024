@@ -23,8 +23,14 @@ def initDbClient():
         print(e)
         return None
 
+def doOneQueryPerInterest(depDate:datetime.datetime, retDate:datetime.datetime, city:str, preferences:list[str]):
+        for preference in preferences:
+            results = doQuery(depDate, retDate, city, [preference])
+            results = list(results)
+            if len(results) > 0:
+                print(results[0])
 
-def doQuery(depDate:datetime.datetime, retDate:datetime.datetime, city:str, preferences:list[str]) -> Cursor:
+def doQuery(depDate:datetime.datetime, retDate:datetime.datetime, city:str, preference:str) -> Cursor:
     global dbClient
     ntries = 0
     while (dbClient == None and ntries < 5):
@@ -41,16 +47,15 @@ def doQuery(depDate:datetime.datetime, retDate:datetime.datetime, city:str, pref
         print("Invalid city", city, ", not in", cities)
         return None
     
-    for i in preferences:
-        if not i in interests:
-            print("Invalid preference", i, ", not in", interests)
-            return None
+    if not preference in interests:
+        print("Invalid preference", i, ", not in", interests)
+        return None
         
     
     query = {"Departure Date": {"$lt": retDate.isoformat()},
              "Return Date": {"$gt":depDate.isoformat()},
              "Arrival City":city,
-             "Activities":{"$in":interests}}
+             "Activities":preference}
     
     return collection.find(query)
 
@@ -95,10 +100,11 @@ def main():
     city = askForCity("Please enter arrival city; ")
     profile = askForInterests("Please enter your interests; ")
         
-    results = doQuery(depDate, retDate, city, profile)
-    
+    results = doQuery(depDate, retDate, city, profile[0])
+
     for res in results:
-        print(res)
+        print(res['Activities'])
+
             
 if __name__ == "__main__":
     main()
