@@ -34,11 +34,11 @@ def getEventsInfo(events:list[dict]):
     return eventsInfo
 
 
-def getActivitiesFromCityAndDate(cityName:str, date:str):
+def getActivitiesFromCityAndDate(cityName:str, dateIni:str, dateEnd:str):
     params = {
     'apikey': API_KEY,
     'city': cityName, 
-    'startEndTime' : [date,date],
+    'startEndTime' : [dateIni,dateEnd],
     }
     response = requests.get(BASE_URL + SEARCH_EVENTS_ENDPOINT, params=params)
     if response.status_code == 200:
