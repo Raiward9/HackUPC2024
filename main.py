@@ -36,18 +36,22 @@ all_fields = False
 def change_init(state):
     state.init = False
     state.start_again = True
-    #state.events = getEvents(state.date_init, state.date_end, state.departure, state.selected_activities)
-    state.events = getEvents(datetime(2024,6,4), datetime(2024,7,5), "Barcelona", ["Concerts"])
+    state.events = getEvents(state.date_init, state.date_end, state.arrival, state.selected_activities)
+    #state.events = getEvents(datetime(2024,6,4), datetime(2024,7,5), "Barcelona", ["Concerts"])
     while state.events == []:
         True
     print("Events: ", state.events)
-    navigate(state, "feed", force=state.start_again)
+    navigate(state, "feed")
     print("Events 3: ", state.events)
 def default_values(state):
     state.init = True
     state.start_again = False
     state.departure = ""
     state.arrival = ""
+    state.activities = []
+    state.selected_activities = []
+    state.selected_categories = []
+    state.events = []
     navigate(state, "/")
 
 def all_fields_filled(state):
@@ -91,15 +95,10 @@ with tgb.Page(on_refresh=default_values) as root_page:
 
 
 with tgb.Page(on_refresh=default_values) as feed:
-    with tgb.part(render = "{start_again}"):
+    with tgb.part(render="{start_again}"):
         tgb.text(value="# Feed", mode="md", color="primary", align="center")
         print("Events2: ", events)
-        for e,p in events:
-            with tgb.expandable("Event: " + e.name):
-                tgb.input(value=e.classification, active=False, label="Classification")
-                tgb.text(value="Date: " + e.date)
-                tgb.text(value="Time: " + e.time)
-                tgb.text(value="Venue: " + e.venue)
+        tgb.text("{events}")
                 
         tgb.button("Start Again", color="secondary", size="lg", block=True, on_action=default_values, on_change=on_change)
 
@@ -113,5 +112,6 @@ pages = {
     "feed" : feed
 }
 
-if __name__ == '__main__':
-    Gui(pages=pages).run(debug=True, use_reloader=True)
+if __name__ == "__main__":
+    app = Gui(pages=pages)
+    app.run(debug=True, use_reloader=True)
