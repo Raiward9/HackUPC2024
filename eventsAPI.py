@@ -112,12 +112,12 @@ def classifyEvent(e: Event):
 
 
 # ---------------- TESTING ----------------
-#dateSt = datetime.now()
-#dateEnd = datetime(2024,5,25)
-#lst = getActivitiesFromCityAndDate('Syracuse',dateSt,dateEnd)
-#for elem in lst: 
-#    print(elem)
-#    print('----------------')
+dateSt = datetime.now()
+dateEnd = datetime(2024,5,25)
+lst = getActivitiesFromCityAndDate('Syracuse',dateSt,dateEnd)
+for elem in lst: 
+    print(elem)
+    print('----------------')
 #print(len(lst))
 #lst2 = list(filter(lambda elem: elem.classification == "Miscellaneous",lst))
 #print(len(lst2))
