@@ -23,12 +23,14 @@ def initDbClient():
         print(e)
         return None
 
-def doOneQueryPerInterest(depDate:datetime.datetime, retDate:datetime.datetime, city:str, preferences:list[str]):
+def doOneQueryPerInterest(depDate:datetime.datetime, retDate:datetime.datetime, city:str, preferences:list[str]) -> dict:
+        resultPreferences = {}
         for preference in preferences:
-            results = doQuery(depDate, retDate, city, [preference])
+            results = doQuery(depDate, retDate, city, preference)
             results = list(results)
-            if len(results) > 0:
-                print(results[0])
+            resultPreferences[preference] = results
+            
+        return resultPreferences
 
 def doQuery(depDate:datetime.datetime, retDate:datetime.datetime, city:str, preference:str) -> Cursor:
     global dbClient
@@ -48,7 +50,7 @@ def doQuery(depDate:datetime.datetime, retDate:datetime.datetime, city:str, pref
         return None
     
     if not preference in interests:
-        print("Invalid preference", i, ", not in", interests)
+        print("Invalid preference", preference, ", not in", interests)
         return None
         
     
@@ -58,55 +60,3 @@ def doQuery(depDate:datetime.datetime, retDate:datetime.datetime, city:str, pref
              "Activities":preference}
     
     return collection.find(query)
-
-def askForDate(prompt:str) -> datetime.datetime:
-    date_input = input(prompt)
-
-    try:
-        # Parse the input string into a datetime object
-        user_date = datetime.datetime.strptime(date_input, "%Y-%m-%d")
-        print("You entered:", user_date)
-        return user_date
-    except ValueError:
-        print("Invalid date format. Please enter a date in the format YYYY-MM-DD.")
-        return askForDate(prompt)
-
-def askForCity(prompt:str) -> str:
-    city_input = input(prompt + "Choose from: " + str(cities) + "\n")
-    
-    if not city_input in cities:
-        print("City not available")
-        return askForCity(prompt)
-    else:
-        return city_input
-    
-def askForInterests(prompt:str)->list[str]:
-    retlist = []
-    print(prompt)
-    while (input("Current interests: " + str(retlist) + ";\nAny more interests [y/n]") != "n"):
-        int_input = input(prompt + "Choose from: " + str(interests) + "\n")    
-        if not int_input in interests:
-            print("Interest not available")
-        else:
-            retlist.append(int_input)
-        
-    return retlist
-            
-
-def main():
-    
-    depDate = askForDate("Please enter an arrival date (YYYY-MM-DD): ")
-    retDate = askForDate("Please enter a return date (YYYY-MM-DD): ")
-    city = askForCity("Please enter arrival city; ")
-    profile = askForInterests("Please enter your interests; ")
-        
-    results = doQuery(depDate, retDate, city, profile[0])
-
-    for res in results:
-        print(res['Activities'])
-
-            
-if __name__ == "__main__":
-    main()
-    
-    
