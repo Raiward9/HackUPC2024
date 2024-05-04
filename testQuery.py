@@ -2,6 +2,10 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 import datetime
 
+cities = ['Amsterdam', 'Barcelona', 'Berlin', 'Brussels', 'Budapest', 'Dublin', 'Florence', 'Lisbon', 'London', 'Madrid', 'Milan', 'Munich', 'Paris', 'Prague', 'Rome', 'Vienna', 'Zurich']
+interests = ['Art Exhibitions', 'Beach Volleyball', 'Concerts', 'Cooking Classes', 'Cultural Festivals', 'Dancing Classes', 'Escape Rooms', 'Food Tours', 'Football Matches', 'Group Cycling Tours', 'Hiking Excursions', 'Hot Air Balloon Rides', 'Karaoke Nights', 'Kayaking', 'Pub Crawls', 'River Cruises', 'Rock Climbing', 'Scavenger Hunts', 'Segway Tours', 'Sightseeing Tours', 'Snorkeling Tours', 'Theater Performances', 'Theme Parks', 'Wine Tasting', 'Zip Line Adventures']
+
+
 def getDbClient() -> MongoClient:
     uri = "mongodb+srv://sergimartinezpamias:FwIFc70b407VBCuw@smp.16uhelv.mongodb.net/?retryWrites=true&w=majority&appName=SMP"
     # Create a new client and connect to the server
@@ -16,8 +20,21 @@ def getDbClient() -> MongoClient:
         return None
 
 
-def doQuery(collection, depDate:datetime.datetime, retDate:datetime.datetime):
-    query = {"Departure Date": {"$lt": retDate.isoformat()}, "Return Date": {"$gt":depDate.isoformat()}}
+def doQuery(collection, depDate:datetime.datetime, retDate:datetime.datetime, city:str, preferences:list[str]):
+    if not city in cities:
+        print("Invalid city", city, ", not in", cities)
+        return None
+    
+    for i in preferences:
+        if not i in interests:
+            print("Invalid preference", i, ", not in", interests)
+            return None
+        
+    
+    query = {"Departure Date": {"$lt": retDate.isoformat()},
+             "Return Date": {"$gt":depDate.isoformat()},
+             "Arrival City":city,
+             "Activities":{"$in":interests}}
     
     return collection.find(query)
 
@@ -33,6 +50,28 @@ def askForDate(prompt:str) -> datetime.datetime:
         print("Invalid date format. Please enter a date in the format YYYY-MM-DD.")
         return askForDate(prompt)
 
+def askForCity(prompt:str) -> str:
+    city_input = input(prompt + "Choose from: " + str(cities) + "\n")
+    
+    if not city_input in cities:
+        print("City not available")
+        return askForCity(prompt)
+    else:
+        return city_input
+    
+def askForInterests(prompt:str)->list[str]:
+    retlist = []
+    print(prompt)
+    while (input("Any more interests [y/n]") != "n"):
+        int_input = input(prompt + "Choose from: " + str(interests) + "\n")    
+        if not int_input in interests:
+            print("Interest not available")
+        else:
+            retlist.append(int_input)
+        
+    return retlist
+            
+
 def main():
     client = getDbClient()
     if client == None:
@@ -44,11 +83,13 @@ def main():
     
     depDate = askForDate("Please enter an arrival date (YYYY-MM-DD): ")
     retDate = askForDate("Please enter a return date (YYYY-MM-DD): ")
+    city = askForCity("Please enter arrival city; ")
+    profile = askForInterests("Please enter your interests; ")
         
-    results = doQuery(collection, depDate, retDate)
+    results = doQuery(collection, depDate, retDate, city, profile)
     
     for res in results:
-        print(res['Departure Date'])
+        print(res)
             
 if __name__ == "__main__":
     main()
