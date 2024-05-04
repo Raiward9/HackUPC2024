@@ -60,3 +60,43 @@ def doQuery(depDate:datetime.datetime, retDate:datetime.datetime, city:str, pref
              "Activities":preference}
     
     return collection.find(query)
+
+def addUser(name:str, depDate:datetime.datetime, retDate:datetime.datetime, depCity:str, arrCity:str, activities:list[str]):
+    global dbClient
+    ntries = 0
+    while (dbClient == None and ntries < 5):
+        initDbClient()
+        ntries += 1
+        
+    if ntries == 5:
+        raise Exception("Failed connection")
+    
+    db = dbClient['hackupc_travel']
+    collection = db['travel_info']
+    
+    if not depCity in cities:
+        print("Invalid city", depCity, ", not in", cities)
+        return None
+    
+    if not arrCity in cities:
+        print("Invalid city", arrCity, ", not in", cities)
+        return None
+    
+    for preference in activities:
+        if not preference in interests:
+            print("Invalid preference", preference, ", not in", interests)
+            return None
+    
+    individual = {
+        "Traveller Name": name,
+        "Departure Date": depDate.isoformat(),
+        "Return Date": retDate.isoformat(),
+        "Departure City": depCity,
+        "Arrival City": arrCity,
+        "Activities": activities}
+    
+    try:
+        collection.insert_one(individual)
+    except Exception as error:
+        print("An exception occurred:", error)
+    
