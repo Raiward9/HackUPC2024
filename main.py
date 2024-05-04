@@ -4,7 +4,8 @@ import taipy.gui.builder as tgb
 import taipy as tp
 
 cities = ['Amsterdam', 'Barcelona', 'Berlin', 'Brussels', 'Budapest', 'Dublin', 'Florence', 'Lisbon', 'London', 'Madrid', 'Milan', 'Munich', 'Paris', 'Prague', 'Rome', 'Vienna', 'Zurich']
-dates = [datetime(2024, 1, 1), datetime(2024, 12, 31)]
+date_init = datetime.now()
+date_end = datetime.now()
 
 departure = ""
 arrival = ""
@@ -52,21 +53,25 @@ def on_change(state, var_name: str, value: any):
 
 with tgb.Page(on_refresh=change_init) as root_page:
     tgb.text(value="# Welcome Traveler", mode="md", color="primary", align="center")
-    with tgb.layout("5 2*1"):
+    with tgb.layout("4*1"):
         with tgb.part(render = "{init}"):
-            tgb.date_range("{dates}", with_time=False)
+            tgb.date("{date_init}", label="Departure Date", with_time=False)
+        with tgb.part(render = "{init}"):
+            tgb.date("{date_end}", label="Return Date", with_time=False)
         with tgb.part(render = "{init}"): 
-            tgb.selector(value="{departure}",label="Departure", lov="{cities}", dropdown=True, on_change=on_change)
+            tgb.selector(value="{departure}",label="Departure City", lov="{cities}", dropdown=True, on_change=on_change)
         with tgb.part(render = "{init}"):
-            tgb.selector(value="{arrival}",label="Arrival", lov="{cities}", default="{arrival}",dropdown=True, on_change=on_change)
+            tgb.selector(value="{arrival}",label="Arrival City", lov="{cities}", default="{arrival}",dropdown=True, on_change=on_change)
+    with tgb.part(render = "{init}"):
+        tgb.text(value="#### \nSelect your preferences", mode="md", color="primary", align="center")
 
-    with tgb.layout("5 2*1"):
-        with tgb.part(render = "{init}"):
-            pass
+    with tgb.layout("4*1"):
         with tgb.part(render = "{init}"):
             tgb.selector(value= "{selected_categories}", label = "Categories", lov = "{categories}", multiple = True, dropdown=True, on_change=on_change)
         with tgb.part(render = "{init}"):
             tgb.selector(value= "{selected_activities}", label = "Activities", lov = "{activities}", multiple = True, dropdown=True, on_change=on_change)
+    with tgb.part(render = "{init}"):
+        tgb.text(value="####\n", mode="md")
     
     with tgb.part(render = "{init}"):
         tgb.button("Meet People", color="primary", size="lg", block=True, on_action=change_init)
