@@ -9,8 +9,6 @@ API_TOKEN_HUGGINGFACE = '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'
 inference = None
 classifications = ['Art and Culture', 'Music', 'Adventure', 'Sports and Fitness', 'Gastronomy', 'City Exploration', 'Escape Rooms', 'Scavenger Hunts', 'Theme Parks']
 
-uri = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=yhLUu4K12SkgG9JHcbG3qvrsx4WehgdU"
-
 # Ticketmaster API key
 API_KEY = 'yhLUu4K12SkgG9JHcbG3qvrsx4WehgdU'
 
@@ -112,12 +110,12 @@ def classifyEvent(e: Event):
 
 
 # ---------------- TESTING ----------------
-dateSt = datetime.now()
-dateEnd = datetime(2024,5,25)
-lst = getActivitiesFromCityAndDate('Syracuse',dateSt,dateEnd)
-for elem in lst: 
-    print(elem)
-    print('----------------')
+#dateSt = datetime.now()
+#dateEnd = datetime(2024,5,25)
+#lst = getActivitiesFromCityAndDate('Syracuse',dateSt,dateEnd)
+#for elem in lst: 
+#    print(elem)
+#    print('----------------')
 #print(len(lst))
 #lst2 = list(filter(lambda elem: elem.classification == "Miscellaneous",lst))
 #print(len(lst2))
