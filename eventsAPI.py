@@ -1,6 +1,12 @@
 import requests
 from datetime import datetime
 from dataclasses import dataclass
+from huggingface_hub.inference_api import InferenceApi
+
+# Hugging face
+API_TOKEN_HUGGINGFACE = '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'
+inference = None
+classifications = ['Art and Culture', 'Music', 'Adventure', 'Sports and Fitness', 'Gastronomy', 'City Exploration', 'Miscellaneous']
 
 uri = "https://app.ticketmaster.com/discovery/v2/events.json?apikey=yhLUu4K12SkgG9JHcbG3qvrsx4WehgdU"
 
@@ -20,6 +26,7 @@ class Event:
     date: str
     time: str
     venue: str
+    classification: str
 
 def getEventsInfo(events:list[dict]):
     eventsInfo = []
@@ -29,7 +36,8 @@ def getEventsInfo(events:list[dict]):
         date =  event['dates']['start']['localDate']
         time = event['dates']['start']['localTime']
         venue = event['_embedded']['venues'][0]['name']
-        eventsInfo.append(Event(name,type,date,time,venue))
+        eventsInfo.append(Event(name,type,date,time,venue,""))
+        classifyEvent(eventsInfo[-1])
     
     return eventsInfo
 
@@ -47,6 +55,20 @@ def getActivitiesFromCityAndDate(cityName:str, dateIni:str, dateEnd:str):
 
     else: print("Error while making a request to api")
 
+
+def classifyEvent(e: Event):
+    global inference
+    if inference == None:
+        inference = InferenceApi(repo_id="typeform/distilbert-base-uncased-mnli", token=API_TOKEN_HUGGINGFACE)
+        
+    inputs = "Classify the following activity: \""+ e.name + "\""
+    params = {"candidate_labels":classifications}
+    out = inference(inputs, params)
+    e.classification = out['labels'][out['scores'].index(max(out['scores']))]
+    
+    
+    
+    
 
 # ---------------- TESTING ----------------
 #dateSt = datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')  

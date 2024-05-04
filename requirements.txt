@@ -4,3 +4,4 @@ pandas
 pymongo
 json
 requests
+huggingface_hub
