@@ -1,0 +1,9 @@
+You are in <insert_name_city> travelling, what activity should you do: <list_activities>
+
+    -> Going to a museum:
+        You decided to go to a local art museum. Near the museum, you come across a very excentric man and you decided to <salue | ignrore> him
+            
+    -> Go canoeing:
+        You decided to go canoeing to the nearest river. By the river you find a very excentric man and you decided to <salue | ignore> him. 
+
+    -> etc.
