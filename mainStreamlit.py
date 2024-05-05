@@ -25,7 +25,16 @@ if button:
         st.write("Date: " + event.date)
         st.write("Venue: ", event.venue)
         st.write("Link: ", event.pageLink)
-        st.write("People interested: ", persones)
+        
+        res = ""
+        for ind, persona in enumerate(persones):
+            if ind == 0:
+                res += persona
+            else:
+                res += ", "
+                res += persona
+
+        st.write("People interested: ", res)
 
 
         
