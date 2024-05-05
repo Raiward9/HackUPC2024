@@ -68,8 +68,6 @@ def getEvents(depDate:datetime.datetime, retDate:datetime.datetime, city:str, ac
         if desiredEvent != None and not desiredEvent in eventsChosen:
             result.append((desiredEvent, nomsPersones))
             eventsChosen.append(desiredEvent)
-
-    print(result)
         
     return result
 
@@ -121,8 +119,19 @@ def main():
         
     results = getEvents(depDate, retDate, city, profile)
 
-    for res in results:
-        print(res)
+    for ind, result in enumerate(results):
+        event, persones = result
+        print(event)
+        print(persones)
+        print(f" --- Event {ind} ---")
+        print("Name: ", event.name)
+        print("Date: ", event.date)
+        print("Category: ", event.type)
+        print("Venue: ", event.venue)
+        print("Link: ", event.pageLink)
+        print("People interested: ", persones)
+        
+        
 
             
 if __name__ == "__main__":
